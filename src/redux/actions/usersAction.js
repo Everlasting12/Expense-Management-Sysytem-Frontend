@@ -77,7 +77,7 @@ export const forgetPasswordUser = (data) => (dispatch) =>
             resetPasswordLinkSent("An Email with Reset Link is sent to your email id")
             setTimeout(() =>
             {
-                window.location.href = "http://localhost:3000/";
+                window.location.href = "https://blooming-brushlands-42033.herokuapp.com/";
             }, 5000);
         }
         else
@@ -98,7 +98,7 @@ export const resetPasswordUser = (data) => (dispatch) =>
                 resetPasswordSuccess("Password Reset Successful")
                 setTimeout(() =>
                 {
-                    window.location.replace("http://localhost:3000/login");
+                    window.location.replace("https://blooming-brushlands-42033.herokuapp.com/login");
                 }, 5000);
                 // window.location.href = "http://localhost:3000/login";
             }).catch(error =>
