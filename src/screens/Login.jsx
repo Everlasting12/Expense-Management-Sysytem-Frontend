@@ -49,7 +49,7 @@ const Login = () => {
       if (decode.role === "primary user") {
         decode.role = "primaryuser";
       }
-      LoginSuccess();
+      // LoginSuccess();
       navigate(`/${decode.role}`);
     }
   }, [token]);

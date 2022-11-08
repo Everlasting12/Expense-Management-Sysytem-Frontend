@@ -13,6 +13,10 @@ export const loginAction = (data) => async (dispatch) =>
     try
     {
         const response = await axios.post(apiEndpoint, { ...data, "strategy": "local" })
+        toast.promise(response, {
+            success: "LoggedIn Successful!",
+            error:"Invalid Email or Password"
+        })
         sessionStorage.setItem("token", response.data.accessToken)
         dispatch({ type: actions.LOGIN_USER, payload: { token: response.data.accessToken } })
     }
