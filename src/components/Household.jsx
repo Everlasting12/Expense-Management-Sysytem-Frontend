@@ -24,6 +24,7 @@ const Household = () => {
   }, [loggedInUser]);
 
   useEffect(() => {
+    console.log("I am before");
     dispatch(
       getAllHouseholdForCurrentPrimaryUserAction(loggedInUser?._id, searchText)
     );
