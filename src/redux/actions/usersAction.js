@@ -18,10 +18,14 @@ export const getAllUsersAction = (searchText) => (dispatch) =>
 
 export const deleteUserAction = (userId) => (dispatch, getState) =>
 {
-    axios.delete(apiEndpoint + userId, {
+    toast.promise(axios.delete(apiEndpoint + userId, {
         headers: {
             "Authorization": getState().loginReducer.token
         }
+    }), {
+        pending: "Deleting User...",
+        success: "User deleted successfully!",
+        error: "Something went wrong"
     }).then(response => dispatch({ type: actions.DELETE_USER, payload: { user: response.data } })
     ).catch(error => console.log(error))
 }
@@ -38,10 +42,14 @@ export const updateUserAction = (data) => (dispatch, getState) =>
 {
     const user = { ...data }
     delete user._id
-    axios.patch(apiEndpoint + data._id, user, {
+    toast.promise(axios.patch(apiEndpoint + data._id, user, {
         headers: {
             "Authorization": getState().loginReducer.token
         }
+    }), {
+        pending: "Updating user...",
+        success: "User updated successfully!",
+        error: "Something went wrong"
     }).then(response => dispatch({
         type: actions.UPDATE_USER,
         payload: { user: response.data }
@@ -65,7 +73,9 @@ const apiEndPointForgotPassword = process.env.REACT_APP_API_URL_FEATHERS + "forg
 export const forgetPasswordUser = (data) => (dispatch) =>
 {
 
-    axios.put(apiEndPointForgotPassword, data).then(response =>
+    toast.promise(axios.put(apiEndPointForgotPassword, data), {
+        pending: "Processing your request..."
+    }).then(response =>
     {
         console.log("email sent successfully")
     }).catch(error =>
@@ -93,7 +103,9 @@ export const resetPasswordUser = (data) => (dispatch) =>
         const user = jwtDecode(data.resetLink)
 
         {
-            axios.patch(apiEndPointForgotPassword + user._id, data).then(response =>
+            toast.promise(axios.patch(apiEndPointForgotPassword + user._id, data), {
+                pending: "Processing your request..."
+            }).then(response =>
             {
                 resetPasswordSuccess("Password Reset Successful")
                 setTimeout(() =>

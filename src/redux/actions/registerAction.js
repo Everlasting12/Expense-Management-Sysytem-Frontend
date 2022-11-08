@@ -9,13 +9,15 @@ const apiEndpoint = process.env.REACT_APP_API_URL_FEATHERS + "users"
 export const registerAction = (data) => (dispatch) =>
 {
 
-    axios.post(apiEndpoint, data
+    toast.promise(axios.post(apiEndpoint, data
         , {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
         }
-    )
+    ), {
+        pending: "Registering you...",
+    })
         .then(response =>
         {
             dispatch({ type: actions.REGISTER_USER })

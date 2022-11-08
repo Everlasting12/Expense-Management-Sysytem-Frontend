@@ -28,10 +28,14 @@ export const getAllHouseholdForCurrentPrimaryUserAction = (primaryUserId, search
 
 export const deleteHouseholdAction = (householdId) => (dispatch, getState) =>
 {
-    axios.delete(apiEndpoint + householdId, {
+    toast.promise(axios.delete(apiEndpoint + householdId, {
         headers: {
             "Authorization": getState().loginReducer.token
         }
+    }), {
+        pending: "Deleting Houehold",
+        success: "Household deleted successfully!",
+        error: "Something went wrong"
     })
         .then(response => dispatch({ type: actions.DELETE_HOUSEHOLD, payload: { household: response.data } }))
         .catch(error => console.log(error))
@@ -61,10 +65,12 @@ export const updateHouseholdAction = (data) => (dispatch, getState) =>
 {
     const householdData = { ...data }
     delete householdData._id
-    axios.put(apiEndpoint + data._id, householdData, {
+    toast.promise(axios.put(apiEndpoint + data._id, householdData, {
         headers: {
             "Authorization": getState().loginReducer.token
         }
+    }), {
+        pending: "Updating Household",
     })
         .then(response =>
         {

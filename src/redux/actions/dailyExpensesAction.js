@@ -24,14 +24,15 @@ export const getAllDailyExpenses = () => (dispatch) =>
 
 export const addDailyExpenses = (data) => (dispatch, getState) =>
 {
-    axios.post(apiEndpoint, data, {
+    toast.promise(axios.post(apiEndpoint, data, {
         headers: {
             "Authorization": getState().loginReducer.token
         }
-    })
-        .then(response => dispatch({
-            type: CREATE_DAILY_EXPENSE,
-            payload: { dailyExpense: response.data }
-        }))
-        .catch(error => console.log(error))
+    }), {
+        pending: "Adding Daily Expense.",
+        success: "Daily Expense added successfully!"
+    }).then(response => dispatch({
+        type: CREATE_DAILY_EXPENSE,
+        payload: { dailyExpense: response.data }
+    })).catch(error => console.log(error))
 }

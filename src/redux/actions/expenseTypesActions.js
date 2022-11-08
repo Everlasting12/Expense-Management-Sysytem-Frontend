@@ -13,10 +13,14 @@ export const getAllExpenseTypesAction = (searchText) => (dispatch) =>
 
 export const addExpenseTypeAction = (data) => (dispatch, getState) =>
 {
-    axios.post(apiEndpoint, data, {
+    toast.promise(axios.post(apiEndpoint, data, {
         headers: {
             "Authorization": getState().loginReducer.token
         }
+    }), {
+        pending: "Adding Expense type",
+        success: "Expense Type added successfully!",
+        error: "Something went wrong"
     })
         .then(response => dispatch({ type: actions.CREATE_EXPSENSE_TYPES, payload: { expenseType: response.data } })
         )
@@ -26,30 +30,37 @@ export const addExpenseTypeAction = (data) => (dispatch, getState) =>
 
 export const deleteExpenseTypeAction = (expenseTypeId) => (dispatch, getState) =>
 {
-    axios.delete(apiEndpoint + expenseTypeId, {
+    toast.promise(axios.delete(apiEndpoint + expenseTypeId, {
         headers: {
             "Authorization": getState().loginReducer.token
         }
-    })
+    }, {
+        pending: "Deleting Expense type",
+        success: "Expense Type deleted successfully!",
+        error: "Something went wrong"
+    }))
         .then(response => dispatch({ type: actions.DELETE_EXPSENSE_TYPES, payload: { expenseType: response.data } }))
         .catch(error => console.log(error))
 }
 
 export const getCurrentExpenseTypeAction = (expenseTypeId) => (dispatch) =>
 {
-    axios.get(apiEndpoint + expenseTypeId)
-        .then(response => dispatch({
-            type: actions.GET_CURRENT_EXPENSE_TYPE,
-            payload: { currentExpenseType: response.data }
-        }))
+    axios.get(apiEndpoint + expenseTypeId).then(response => dispatch({
+        type: actions.GET_CURRENT_EXPENSE_TYPE,
+        payload: { currentExpenseType: response.data }
+    }))
         .catch(error => console.log(error))
 }
 
 export const updateExpenseTypeAction = (data) => (dispatch, getState) =>
 {
 
-    axios.put(apiEndpoint + data._id, { name: data.name }, {
+    toast.promise(axios.put(apiEndpoint + data._id, { name: data.name }, {
         headers: { "Authorization": getState().loginReducer.token }
+    }), {
+        pending: "Updating Expense type",
+        success: "Expense Type updated successfully!",
+        error: "Something went wrong"
     }).then(response => dispatch({ type: actions.UPDATE_EXPSENSE_TYPES, payload: { expenseType: response.data } }))
         .catch(error => console.log(error))
 }
