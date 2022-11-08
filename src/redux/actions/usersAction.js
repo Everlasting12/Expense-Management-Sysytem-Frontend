@@ -10,7 +10,10 @@ const resetPasswordLinkSent = (msg) => toast.success(msg, { theme: "light", auto
 const apiEndpoint = process.env.REACT_APP_API_URL_FEATHERS + "users/"
 export const getAllUsersAction = (searchText) => (dispatch) =>
 {
-    axios.get(apiEndpoint + `?fullname=${ searchText }`)
+    toast.promise(axios.get(apiEndpoint + `?fullname=${ searchText }`),
+        {
+            pending: "Fetching all the Users from the Database"
+        })
         .then(response => dispatch({ type: actions.GET_ALL_USERS, payload: { users: response.data.data } })
         )
         .catch(error => console.log(error))
