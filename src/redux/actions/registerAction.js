@@ -23,6 +23,6 @@ export const registerAction = (data) => (dispatch) =>
         }).catch(error =>
         {
             console.log(error)
-            userAddingFailed(error.response.data)
+            userAddingFailed(error.response.data.message)
         })
 }
