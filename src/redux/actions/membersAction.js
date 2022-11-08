@@ -18,14 +18,15 @@ export const getAllMembersAction = () => dispatch =>
 
 export const addMemberAction = (data) => (dispatch, getState) =>
 {
-    axios.post(apiEndPoint, data, {
+    toast.promise(axios.post(apiEndPoint, data, {
         headers: {
             "Authorization": getState().loginReducer.token
         }
+    }), {
+        pending: "Adding Member in Household",
+        success: "Member added successfully",
     }).then(response =>
     {
-        memberAddedSuccess("Member added successfully")
-
         dispatch({
             type: CREATE_MEMBER,
             payload: { member: response.data }
@@ -41,10 +42,15 @@ export const addMemberAction = (data) => (dispatch, getState) =>
 
 export const deleteMemberAction = (memberId) => (dispatch, getState) =>
 {
-    axios.delete(apiEndPoint + memberId, {
+    toast.promise(axios.delete(apiEndPoint + memberId, {
         headers: {
             "Authorization": getState().loginReducer.token
         }
+    }), {
+
+        pending: "Deleting Member from Household",
+        success: "Member deleted successfully",
+
     }).then(
         response => dispatch({
             type: DELETE_MEMBER,

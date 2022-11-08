@@ -140,12 +140,12 @@ const Member = () => {
                       {d?.householdName}
                     </td>
                     <td className="py-2 px-6 flex ">
-                      <Link to={`memberForm/${d?._id}`}>
+                      {/* <Link to={`memberForm/${d?._id}`}>
                         <MdOutlineEdit
                           size={20}
                           className="text-[#3F7BDA] bg-slate-50 p-[5px] w-7 h-7 rounded-full cursor-pointer hover:bg-slate-100 focus:bg-slate-100"
                         />
-                      </Link>
+                      </Link> */}
 
                       <MdDeleteOutline
                         size={20}
