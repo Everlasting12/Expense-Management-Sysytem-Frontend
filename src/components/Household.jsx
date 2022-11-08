@@ -25,9 +25,10 @@ const Household = () => {
 
   useEffect(() => {
     console.log("I am before");
-    dispatch(
-      getAllHouseholdForCurrentPrimaryUserAction(loggedInUser?._id, searchText)
-    );
+    if (loggedInUser)
+      dispatch(
+        getAllHouseholdForCurrentPrimaryUserAction(loggedInUser._id, searchText)
+      );
   }, [searchText]);
 
   const handleDelete = (householdId) => {
