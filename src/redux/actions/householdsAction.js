@@ -38,10 +38,12 @@ export const deleteHouseholdAction = (householdId) => (dispatch, getState) =>
 }
 export const createHouseholdAction = (data) => (dispatch, getState) =>
 {
-    axios.post(apiEndpoint, data, {
+    toast.promise(axios.post(apiEndpoint, data, {
         headers: {
             "Authorization": getState().loginReducer.token
         }
+    }), {
+        pending: "Adding Houehold"
     })
         .then(response =>
         {

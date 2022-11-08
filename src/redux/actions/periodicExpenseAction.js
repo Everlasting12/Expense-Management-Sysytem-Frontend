@@ -31,22 +31,27 @@ export const getCurrentPeriodicExpenses = (periodicExpenseId) => dispatch =>
 
 export const addPeriodicExpenseAction = (data) => (dispatch, getState) =>
 {
-    axios.post(apiEndPoint, data, { headers: { "Authorization": getState().loginReducer.token } })
-        .then(response => dispatch({
-            type: CREATE_PERIODIC_EXPENSE,
-            payload: { periodicExpense: response.data }
-        }))
+    toast.promise(axios.post(apiEndPoint, data, { headers: { "Authorization": getState().loginReducer.token } }), {
+        pending: "Adding your Periodic Expense",
+        success: "Expense Added Successfully",
+        error: "Something went wrong!"
+    }).then(response => dispatch({
+        type: CREATE_PERIODIC_EXPENSE,
+        payload: { periodicExpense: response.data }
+    })).catch(error => { })
 }
 export const updatePeriodicExpenseAction = (data) => (dispatch, getState) =>
 {
 
-    axios.patch(apiEndPoint + data._id, data, { headers: { "Authorization": getState().loginReducer.token } })
-        .then(response =>
-        {
-            periodicExpenseUpdated(`${ response.data.description } is updated successfully`)
-            dispatch({
-                type: UPDATE_PERIODIC_EXPENSE,
-                payload: { periodicExpense: response.data }
-            })
+    toast.promise(axios.patch(apiEndPoint + data._id, data, { headers: { "Authorization": getState().loginReducer.token } }), {
+        pending: "Updating the Periodic Expense",
+        error: "Something went wrong!"
+    }).then(response =>
+    {
+        periodicExpenseUpdated(`${ response.data.description } is updated successfully`)
+        dispatch({
+            type: UPDATE_PERIODIC_EXPENSE,
+            payload: { periodicExpense: response.data }
         })
+    })
 }
