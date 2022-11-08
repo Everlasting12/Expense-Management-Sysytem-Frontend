@@ -8,21 +8,22 @@ const loginFailed = () => toast.error("Invalid Email or Password!")
 
 const apiEndpoint = process.env.REACT_APP_API_URL_FEATHERS + "authentication"
 
-export const loginAction = (data) => async (dispatch) =>
+export const loginAction = (data) => (dispatch) =>
 {
-    try
+
+    // const response = await axios.post(apiEndpoint, { ...data, "strategy": "local" })
+    toast.promise(axios.post(apiEndpoint, { ...data, "strategy": "local" }), {
+        success: "LoggedIn Successful!",
+        error: "Invalid Email or Password",
+        pending: 'Processing your request...',
+    }).then(response =>
     {
-        const response = await axios.post(apiEndpoint, { ...data, "strategy": "local" })
-        toast.promise(response, {
-            success: "LoggedIn Successful!",
-            error:"Invalid Email or Password"
-        })
         sessionStorage.setItem("token", response.data.accessToken)
         dispatch({ type: actions.LOGIN_USER, payload: { token: response.data.accessToken } })
-    }
-    catch (error)
+    })
+        .catch(error)
     {
-        loginFailed()
+        // loginFailed()
         console.log(error)
     }
 }
