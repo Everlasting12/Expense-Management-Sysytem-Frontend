@@ -17,8 +17,11 @@ const Household = () => {
   const loggedInUser = useSelector((state) => state.loginReducer.user);
 
   useEffect(() => {
-    dispatch(getAllHouseholdForCurrentPrimaryUserAction(loggedInUser?._id));
-  }, []);
+    if (loggedInUser)
+      dispatch(
+        getAllHouseholdForCurrentPrimaryUserAction(loggedInUser._id, "")
+      );
+  }, [loggedInUser]);
 
   useEffect(() => {
     dispatch(
