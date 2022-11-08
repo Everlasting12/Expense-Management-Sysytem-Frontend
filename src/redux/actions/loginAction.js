@@ -20,12 +20,8 @@ export const loginAction = (data) => (dispatch) =>
     {
         sessionStorage.setItem("token", response.data.accessToken)
         dispatch({ type: actions.LOGIN_USER, payload: { token: response.data.accessToken } })
-    })
-        .catch(error)
-    {
-        // loginFailed()
-        console.log(error)
-    }
+    }).catch(error => console.log(error))
+
 }
 
 export const loadLogin = () =>
