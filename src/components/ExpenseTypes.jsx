@@ -29,7 +29,8 @@ const ExpenseTypes = () => {
     console.log(expenseTypeId);
   };
   const handleDelete = (expenseTypeId) => {
-    dispatch(deleteExpenseTypeAction(expenseTypeId));
+    const result = window.confirm("Do you want to delete This Expense type?");
+    if (result) dispatch(deleteExpenseTypeAction(expenseTypeId));
   };
 
   return (

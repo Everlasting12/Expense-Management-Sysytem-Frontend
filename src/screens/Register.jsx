@@ -1,21 +1,12 @@
-import React from "react";
-
-//svgs
-import LoginImage from "../assets/login-image-blue.svg";
-
+import React, { useState } from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigate } from "react-router-dom";
+import { MdClose, MdCloudUpload } from "react-icons/md";
 import { registerAction } from "../redux/actions/registerAction";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { MdCloudUpload } from "react-icons/md";
-
-const EnumRole = {
-  Admin: "admin",
-  "Primary User": "primary user",
-  Member: "member",
-};
+import { resendVerifyAccountLink } from "../redux/actions/usersAction";
 
 const schema = yup.object().shape({
   firstName: yup
@@ -44,15 +35,14 @@ const schema = yup.object().shape({
     .max(1024)
     .required("Please enter your Password"),
 
-  role: yup
-    .mixed()
-    .oneOf(Object.values(Object.values(EnumRole)))
-    .required(),
+  role: yup.string().required("Please select the role"),
 });
 
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [showVerifyMePopup, setShowVerifyMePopup] = useState(false);
 
   const {
     reset,
@@ -63,34 +53,23 @@ const Register = () => {
     resolver: yupResolver(schema),
   });
 
-  function submitSignUp(data) {
+  const submitSignUp = (data) => {
     dispatch(registerAction({ ...data, avatar: data.avatar["0"] }));
+
     navigate("/login");
-  }
+  };
+
+  const handleVerify = (e) => {
+    e.preventDefault();
+    const email = document.querySelector("#emailidverify").value;
+    dispatch(resendVerifyAccountLink(email));
+  };
 
   return (
-    <div
-      className="h-screen w-full flex justify-around items-center bg-slate-200"
-      style={{
-        overflow: "hidden",
-      }}
-    >
-      <div className="text-center hidden lg:block">
-        <img
-          src={LoginImage}
-          alt="login_image"
-          width={400}
-          className="slide-l-r"
-        />
-        <h4 className="mt-4 text-xl font-semibold slide-l-r">
-          Let us help you, <br /> Manage your{" "}
-          <span className="font-bold text-sky-600">Expense</span>
-        </h4>
-      </div>
-      <div className="h-[544px] mt-[-40px] slide-r-l bg-white w-[90%] sm:w-[60%] md:w-[50%] lg:w-[30%] px-5 py-1 shadow-md rounded-md">
+    <div className="h-[calc(100vh-72px)] overflow-y-auto scrollbar-hidden w-full flex justify-center p-5 bg-slate-200">
+      <div className="bg-white h-fit w-[90%] sm:w-[60%] md:w-[50%] lg:w-[40%] xl:w-[30%] px-5 py-1 shadow-md rounded-md">
         <form
           onSubmit={handleSubmit(submitSignUp)}
-          className="text-sm flex flex-col justify-between"
           encType="multipart/form-data"
         >
           <div>
@@ -100,7 +79,7 @@ const Register = () => {
             <div className="flex">
               <div className="mr-[2px]">
                 <label htmlFor="firstname">
-                  Firstname
+                  Firstname<span className="text-red-500 font-bold">*</span>
                   <input
                     type="text"
                     id="firstname"
@@ -114,7 +93,7 @@ const Register = () => {
               </div>
               <div className="ml-[2px]">
                 <label htmlFor="lastName">
-                  Lastname
+                  Lastname<span className="text-red-500 font-bold">*</span>
                   <input
                     type="text"
                     id="lastName"
@@ -129,7 +108,7 @@ const Register = () => {
             </div>
             <div className="">
               <label htmlFor="email">
-                Email
+                Email<span className="text-red-500 font-bold">*</span>
                 <input
                   type="email"
                   id="email"
@@ -141,7 +120,7 @@ const Register = () => {
             </div>
             <div className="">
               <label htmlFor="phone">
-                Phone Number
+                Phone Number<span className="text-red-500 font-bold">*</span>
                 <input
                   type="text"
                   id="phone"
@@ -154,7 +133,7 @@ const Register = () => {
             </div>
             <div className="">
               <label htmlFor="userName">
-                Username
+                Username<span className="text-red-500 font-bold">*</span>
                 <input
                   type="userName"
                   id="userName"
@@ -166,7 +145,7 @@ const Register = () => {
             </div>
             <div className="">
               <label htmlFor="password">
-                Password
+                Password<span className="text-red-500 font-bold">*</span>
                 <input
                   type="password"
                   id="password"
@@ -176,9 +155,11 @@ const Register = () => {
               </label>
               <p className="text-red-400 text-sm">{errors.password?.message}</p>
             </div>
-            <div className="flex items-end justify-between">
-              <label htmlFor="role flex flex-col w-[70%]">
-                Role
+            <div className="flex items-center justify-between">
+              <label htmlFor="role" className="flex flex-col w-[49%]">
+                <p>
+                  Role<span className="text-red-500 font-bold">*</span>
+                </p>
                 <select
                   name="role"
                   id="role"
@@ -197,20 +178,28 @@ const Register = () => {
                 </select>
                 <p className="text-red-400 text-sm">{errors.role?.message}</p>
               </label>
-              <label
-                htmlFor="avatar"
-                className="outline-none flex items-center justify-evenly  bg-white w-[50%] py-[10px] px-3 rounded border-2 focus:border-2 focus:border-sky-500"
-              >
+
+              <div className="flex flex-col w-[49%]">
                 Profile Picture
-                <MdCloudUpload size={20} color="rgb(2 132 199)" />
-                <input
-                  type="file"
-                  name="avatar"
-                  id="avatar"
-                  className="hidden"
-                  {...register("avatar")}
-                />
-              </label>
+                <label
+                  htmlFor="avatar"
+                  className="outline-none w-full py-2 px-3 rounded border-2 focus:border-2 focus:border-sky-500"
+                >
+                  <input
+                    type="file"
+                    name="avatar"
+                    id="avatar"
+                    {...register("avatar")}
+                    className="hidden"
+                  />
+                  <MdCloudUpload
+                    size={20}
+                    color="rgb(2 ,132, 199)"
+                    className="float-right"
+                  />
+                </label>
+                <span className={errors.role ? "h-[20px]" : ""}></span>
+              </div>
             </div>
           </div>
           <div className="mt-3 flex">
@@ -229,6 +218,47 @@ const Register = () => {
             </button>
           </div>
         </form>
+        <div className="flex items-center justify-center">
+          <button
+            className="px-3 py-1 text-sm bg-slate-100/80 text-sky-500 my-2"
+            onClick={() => setShowVerifyMePopup(true)}
+          >
+            Resend Verification Link ?
+          </button>
+        </div>
+      </div>
+
+      <div
+        className={`absolute top-0 left-0 ${
+          showVerifyMePopup ? "flex items-center justify-center" : "hidden"
+        } h-screen w-full bg-slate-700/50`}
+      >
+        <div className="pop-up w-[50%] h-56 bg-sky-900/40 backdrop-blur-sm flex items-center justify-center relative shadow-2xl border border-slate-50/50">
+          <MdClose
+            size={30}
+            className="text-white cursor-pointer absolute top-0 right-0 hover:p-[2px] hover:bg-slate-800"
+            onClick={() => setShowVerifyMePopup(false)}
+          />
+          <label htmlFor="email" className="flex flex-col w-[70%] text-white">
+            Enter your Email id:
+            <form onSubmit={handleVerify} className="flex">
+              <input
+                type="email"
+                name="emailid"
+                id="emailidverify"
+                placeholder="eg: example1.@john.com"
+                className="outline-none px-3 py-2 text-black border-2 focus:border-2 focus:border-sky-500 w-[70%]"
+                required
+              />
+              <button
+                className="ml-2 px-3 py-2 bg-slate-50 text-sky-600 hover:bg-slate-100 focus:bg-slate-100"
+                type="submit"
+              >
+                Verify Me
+              </button>
+            </form>
+          </label>
+        </div>
       </div>
     </div>
   );

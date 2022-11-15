@@ -51,7 +51,8 @@ const Member = () => {
   }
 
   const handleDelete = (memberId) => {
-    dispatch(deleteMemberAction(memberId));
+    const result = window.confirm("Do you want to delete this Member?");
+    if (result) dispatch(deleteMemberAction(memberId));
   };
 
   return (

@@ -28,8 +28,6 @@ const Unauthorized = () =>
     "You are not Authorized to login. Kindly connect with Administrator"
   );
 
-const LoginSuccess = () => toast.success("Login Successful!");
-
 const Login = () => {
   const navigate = useNavigate();
   const token = useSelector((state) => state.loginReducer.token);
@@ -42,14 +40,14 @@ const Login = () => {
         Unauthorized();
         sessionStorage.setItem("token", "");
         dispatch({ type: LOGOUT_USER });
-        // dispatch(logoutUser());
+
         navigate("/");
         return;
       }
       if (decode.role === "primary user") {
         decode.role = "primaryuser";
       }
-      // LoginSuccess();
+
       navigate(`/${decode.role}`);
     }
   }, [token]);

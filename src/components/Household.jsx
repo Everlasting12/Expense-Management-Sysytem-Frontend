@@ -31,7 +31,8 @@ const Household = () => {
   }, [searchText]);
 
   const handleDelete = (householdId) => {
-    dispatch(deleteHouseholdAction(householdId));
+    const result = window.confirm("Do you want to delete this Household?");
+    if (result) dispatch(deleteHouseholdAction(householdId));
   };
 
   return (

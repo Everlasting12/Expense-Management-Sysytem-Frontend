@@ -24,7 +24,8 @@ const Users = () => {
     console.log(userId);
   };
   const handleDelete = (userId) => {
-    dispatch(deleteUserAction(userId));
+    const result = window.confirm("Do you want to delete this User?");
+    if (result) dispatch(deleteUserAction(userId));
   };
   return (
     <>

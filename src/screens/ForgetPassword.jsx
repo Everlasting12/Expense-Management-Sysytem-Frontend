@@ -19,8 +19,19 @@ const ForgetPassword = () => {
   const dispatch = useDispatch();
 
   const handleEmailSubmission = (data) => {
-    dispatch(forgetPasswordUser(data));
-    reset();
+    // console.log(data);
+    dispatch(
+      forgetPasswordUser({
+        action: "sendResetPwd",
+        value: {
+          email: data.email,
+        },
+        notifierOptions: {},
+      })
+    );
+
+    //dispatch(forgetPasswordUser(data));
+    //reset();
   };
 
   return (

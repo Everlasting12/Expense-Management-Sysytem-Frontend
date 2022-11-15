@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
+// import Register from "./screens/Register";
 import BasePage from "./screens/BasePage";
 import store from "./store";
 import { Provider } from "react-redux";
@@ -13,7 +14,7 @@ import ProtectedRoute from "./screens/ProtectedRoute";
 import MemberDashboard from "./screens/MemberDashboard";
 import PrimaryUserDashboard from "./screens/PrimaryUserDashboard";
 import AdminDashboard from "./screens/AdminDashboard";
-import Pricing from "./screens/Pricing";
+
 import Contact from "./screens/Contact";
 import ExpenseTypes from "./components/ExpenseTypes";
 import Users from "./components/Users";
@@ -29,8 +30,9 @@ import PeriodicExpenseForm, { getPeriodicExpenseById } from "./components/Period
 import DailyExpenses from "./components/DailyExpenses";
 import DailyExpenseForm from "./components/DailyExpenseForm";
 import ForgetPassword from "./screens/ForgetPassword";
-import ResetPassword, { getResetToken } from "./screens/ResetPassword";
+import ResetPassword from "./screens/ResetPassword";
 import Notifications from "./screens/Notifications";
+import AccountActivation from "./screens/AccountActivation";
 
 const router = createBrowserRouter([{
   path: "/",
@@ -54,9 +56,12 @@ const router = createBrowserRouter([{
       element: <ForgetPassword />
     },
     {
-      path: "exms/resetpassword/:token",
+      path: "exms/resetpassword/reset",
       element: <ResetPassword />,
-      loader: getResetToken
+    },
+    {
+      path: "exms/activate-account",
+      element: <AccountActivation />,
     },
 
     {

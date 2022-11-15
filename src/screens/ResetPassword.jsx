@@ -1,5 +1,5 @@
 import React from "react";
-import { useLoaderData } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -7,16 +7,12 @@ import { useDispatch } from "react-redux";
 import * as yup from "yup";
 import { resetPasswordUser } from "../redux/actions/usersAction";
 
-export function getResetToken({ params }) {
-  return params.token;
-}
-
 const passwordSchema = yup.object().shape({
   password: yup.string().required("Please enter new password").min(5).max(1024),
 });
 
 const ResetPassword = () => {
-  const token = useLoaderData();
+  const [searchParams] = useSearchParams();
 
   const {
     handleSubmit,
@@ -29,8 +25,12 @@ const ResetPassword = () => {
 
   const handleResetPasswordSubmission = (data) => {
     data = {
-      ...data,
-      resetLink: token,
+      action: "resetPwdLong",
+      value: {
+        token: searchParams.get("token"),
+        password: data.password,
+      },
+      notifierOptions: {},
     };
     dispatch(resetPasswordUser(data));
     reset()

@@ -69,59 +69,165 @@ export const getAllUsersOfRoleMember = () => (dispatch, getState) =>
 }
 
 
-const apiEndPointForgotPassword = process.env.REACT_APP_API_URL_FEATHERS + "forgetpassword/"
+const apiEndPointForgotPassword = process.env.REACT_APP_API_URL_FEATHERS + "auth-management/"
 export const forgetPasswordUser = (data) => (dispatch) =>
 {
 
-    toast.promise(axios.put(apiEndPointForgotPassword, data), {
+    toast.promise(axios.post(apiEndPointForgotPassword, data), {
+        pending: "Processing your request...",
+        success: "Reset Password link is sent to you by Email"
+    }).then(response =>
+    {
+
+    }).catch(error =>
+    {
+        resetPasswordFailed(error.response.data.message)
+
+    })
+}
+
+
+export const resetPasswordUser = (data) => (dispatch) =>
+{
+
+    toast.promise(axios.post(apiEndPointForgotPassword, data), {
         pending: "Processing your request..."
     }).then(response =>
     {
-        console.log("email sent successfully")
+        resetPasswordSuccess(response.data.message)
+        setTimeout(() =>
+        {
+            window.location.replace("https://blooming-brushlands-42033.herokuapp.com/login");
+        }, 5000);
     }).catch(error =>
     {
-        const { name, code, message } = error.response.data
-        if (code === 400 && name === 'BadRequest' && message === "You can not replace multiple instances. Did you mean 'patch'?")
-        {
-            // window.location.replace("http://localhost:3000/");
-            resetPasswordLinkSent("An Email with Reset Link is sent to your email id")
+        resetPasswordFailed(error.response.data.message)
+    }
+    )
+}
+
+export const resendVerifyAccountLink = (email) => (dispatch) =>
+{
+    let data = {
+        "action": "resendVerifySignup",
+        "value": {
+            "email": email
+        },
+        "notifierOptions": {}
+    }
+    toast.promise(axios.post(apiEndPointForgotPassword, data), {
+        pending: "processing your request...",
+        error: "Could not send the verification link.",
+        success: "Verification link is sent to your email."
+    })
+        .then(res => console.log(res))
+        .catch(e => console.log(e))
+}
+
+export const activateAccount = (data) => (dispatch) =>
+{
+    toast.promise(axios.post(apiEndPointForgotPassword, data), {
+        pending: "processing your request...",
+        error: "Could not activate the account!",
+        success: "Account Verified Successfully!"
+    })
+        .then(
             setTimeout(() =>
             {
-                window.location.href = "https://blooming-brushlands-42033.herokuapp.com/";
-            }, 5000);
-        }
-        else
-        {
-            resetPasswordFailed(error.response.data.message)
-        }
-    })
-}
-export const resetPasswordUser = (data) => (dispatch) =>
-{
-    try
-    {
-        const user = jwtDecode(data.resetLink)
+                window.location.replace("https://blooming-brushlands-42033.herokuapp.com/")
+            }, 2000)
 
-        {
-            toast.promise(axios.patch(apiEndPointForgotPassword + user._id, data), {
-                pending: "Processing your request..."
-            }).then(response =>
-            {
-                resetPasswordSuccess("Password Reset Successful")
-                setTimeout(() =>
-                {
-                    window.location.replace("https://blooming-brushlands-42033.herokuapp.com/login");
-                }, 5000);
-                // window.location.href = "http://localhost:3000/login";
-            }).catch(error =>
-            {
-                resetPasswordFailed(error.response.data.message)
-            }
-            )
-        }
-    }
-    catch (error)
-    {
-        resetPasswordFailed("Invalid Token Provided")
-    }
+        )
+        .catch(error => console.log(error))
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const apiEndPointForgotPassword = process.env.REACT_APP_API_URL_FEATHERS + "forgetpassword/"
+
+// export const forgetPasswordUser = (data) => (dispatch) =>
+// {
+
+//     toast.promise(axios.put(apiEndPointForgotPassword, data), {
+//         pending: "Processing your request..."
+//     }).then(response =>
+//     {
+//         console.log("email sent successfully")
+//     }).catch(error =>
+//     {
+//         const { name, code, message } = error.response.data
+//         if (code === 400 && name === 'BadRequest' && message === "You can not replace multiple instances. Did you mean 'patch'?")
+//         {
+//             // window.location.replace("http://localhost:3000/");
+//             resetPasswordLinkSent("An Email with Reset Link is sent to your email id")
+//             setTimeout(() =>
+//             {
+//                 window.location.href = "https://blooming-brushlands-42033.herokuapp.com/";
+//             }, 5000);
+//         }
+//         else
+//         {
+//             resetPasswordFailed(error.response.data.message)
+//         }
+//     })
+// // }
+// export const resetPasswordUser = (data) => (dispatch) =>
+// {
+//     try
+//     {
+//         const user = jwtDecode(data.resetLink)
+
+//         {
+//             toast.promise(axios.patch(apiEndPointForgotPassword + user._id, data), {
+//                 pending: "Processing your request..."
+//             }).then(response =>
+//             {
+//                 resetPasswordSuccess("Password Reset Successful")
+//                 setTimeout(() =>
+//                 {
+//                     window.location.replace("https://blooming-brushlands-42033.herokuapp.com/login");
+//                 }, 5000);
+//                 // window.location.href = "http://localhost:3000/login";
+//             }).catch(error =>
+//             {
+//                 resetPasswordFailed(error.response.data.message)
+//             }
+//             )
+//         }
+//     }
+//     catch (error)
+//     {
+//         resetPasswordFailed("Invalid Token Provided")
+//     }
+// }
+// }

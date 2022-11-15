@@ -35,11 +35,11 @@ export const deleteExpenseTypeAction = (expenseTypeId) => (dispatch, getState) =
         headers: {
             "Authorization": getState().loginReducer.token
         }
-    }, {
+    }), {
         pending: "Deleting Expense type",
         success: "Expense Type deleted successfully!",
         error: "Something went wrong"
-    }))
+    })
         .then(response => dispatch({ type: actions.DELETE_EXPSENSE_TYPES, payload: { expenseType: response.data } }))
         .catch(error => console.log(error))
 }
